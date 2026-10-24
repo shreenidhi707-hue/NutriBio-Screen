@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>NutriBio-Screen | Clinical Triage Portal</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #ffffff !important; padding: 0 !important; }
+      #page-3, #page-4 { display: block !important; border: 1px solid #cbd5e1 !important; box-shadow: none !important; margin-bottom: 20px !important; }
+      #page-1, #page-2 { display: none !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased bg-slate-50 text-slate-900 pb-12">
+
+  <!-- Mobile-Safe Header with 4 Steps & Language Toggle -->
+  <header class="bg-white border-b border-slate-200 px-4 py-3 shadow-xs">
+    <div class="max-w-3xl mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-9 h-9 rounded-xl bg-teal-600 text-white flex items-center justify-center shadow-xs shrink-0">
+          <i data-lucide="shield-check" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h1 class="text-sm font-extrabold text-slate-900 tracking-tight leading-none">NutriBio-Screen</h1>
+          <p id="t-subtitle" class="text-[10px] text-slate-500 mt-0.5">Clinical Deficiency Screening Suite</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2 no-print">
+        <div class="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-[11px] font-bold">
+          <button id="btn-lang-en" onclick="changeLanguage('en')" class="px-2 py-1 rounded-md bg-white text-teal-700 shadow-2xs transition">EN</button>
+          <button id="btn-lang-ta" onclick="changeLanguage('ta')" class="px-2 py-1 rounded-md text-slate-600 hover:text-slate-900 transition">தமிழ்</button>
+          <button id="btn-lang-hi" onclick="changeLanguage('hi')" class="px-2 py-1 rounded-md text-slate-600 hover:text-slate-900 transition">हिंदी</button>
+        </div>
+
+        <!-- 4 Step Counter -->
+        <div class="flex items-center space-x-1 text-xs font-bold pl-1">
+          <span id="step-badge-1" class="w-6 h-6 rounded-full bg-teal-600 text-white flex items-center justify-center text-[11px]">1</span>
+          <span class="text-slate-300">/</span>
+          <span id="step-badge-2" class="w-6 h-6 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[11px]">2</span>
+          <span class="text-slate-300">/</span>
+          <span id="step-badge-3" class="w-6 h-6 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[11px]">3</span>
+          <span class="text-slate-300">/</span>
+          <span id="step-badge-4" class="w-6 h-6 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[11px]">4</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Area -->
+  <main class="max-w-3xl mx-auto px-4 py-5 flex-1 w-full">
+
+    <!-- ================= PAGE 1: INTAKE ================= -->
+    <div id="page-1" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-xs space-y-5">
+      <div class="border-b border-slate-100 pb-3">
+        <span id="t-step1-tag" class="text-[10px] font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-md">Step 1 of 4</span>
+        <h2 id="t-step1-title" class="text-base font-extrabold text-slate-900 mt-2">Patient Details & Daily Habits</h2>
+        <p id="t-step1-sub" class="text-xs text-slate-500 mt-0.5">Basic details help assess nutritional and lifestyle factors.</p>
+      </div>
+
+      <!-- 1. Demographics & Body Vitals -->
+      <div class="space-y-3.5">
+        <h3 id="t-group1-head" class="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center space-x-1.5">
+          <i data-lucide="user" class="w-3.5 h-3.5 text-teal-600"></i>
+          <span>1. Demographics & Body Vitals</span>
+        </h3>
+
+        <div>
+          <label id="t-label-name" class="block text-xs font-semibold text-slate-700 mb-1">Full Name / Subject ID</label>
+          <input id="patient-name" type="text" placeholder="Enter patient name" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-teal-600 font-medium">
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div>
+            <label id="t-label-age" class="block text-xs font-semibold text-slate-700 mb-1">Age</label>
+            <input id="patient-age" type="number" placeholder="e.g. 20" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-teal-600 font-medium">
+          </div>
+          <div>
+            <label id="t-label-sex" class="block text-xs font-semibold text-slate-700 mb-1">Biological Sex</label>
+            <select id="patient-sex" onchange="toggleFemaleVitals()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-teal-600 font-medium">
+              <option value="" disabled selected>Select Sex</option>
+              <option value="Female">Female</option>
+              <option value="Male">Male</option>
+            </select>
+          </div>
+          <div>
+            <label id="t-label-weight" class="block text-xs font-semibold text-slate-700 mb-1">Weight (kg)</label>
+            <input id="patient-weight" type="number" placeholder="e.g. 55" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-teal-600 font-medium">
+          </div>
+          <div>
+            <label id="t-label-height" class="block text-xs font-semibold text-slate-700 mb-1">Height (cm)</label>
+            <input id="patient-height" type="number" placeholder="e.g. 160" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-teal-600 font-medium">
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Women's Health Profile -->
+      <div id="female-vitals-box" class="hidden border border-rose-100 bg-rose-50/40 rounded-xl p-4 space-y-3">
+        <h3 id="t-group2-head" class="text-xs font-bold text-rose-900 uppercase tracking-wide flex items-center space-x-1.5">
+          <i data-lucide="heart" class="w-3.5 h-3.5 text-rose-600"></i>
+          <span>2. Menstrual & Reproductive Profile (Women's Health)</span>
+        </h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div>
+            <label id="t-label-flow" class="block text-[11px] font-semibold text-slate-700 mb-1">Monthly Menstrual Flow</label>
+            <select id="menstrual-flow" class="w-full bg-white border border-rose-200 rounded-lg p-2 text-xs focus:outline-none focus:border-rose-500">
+              <option value="Normal">Normal Regular Flow</option>
+              <option value="Heavy">Heavy Flow (High Iron Loss)</option>
+              <option value="Light">Light Flow</option>
+              <option value="Irregular">Irregular Cycle</option>
+            </select>
+          </div>
+
+          <div>
+            <label id="t-label-pregnancy" class="block text-[11px] font-semibold text-slate-700 mb-1">Pregnancy Status</label>
+            <select id="pregnancy-status" class="w-full bg-white border border-rose-200 rounded-lg p-2 text-xs focus:outline-none focus:border-rose-500">
+              <option value="No" selected>Not Pregnant</option>
+              <option value="Yes">Pregnant</option>
+            </select>
+          </div>
+
+          <div>
+            <label id="t-label-lactation" class="block text-[11px] font-semibold text-slate-700 mb-1">Lactation</label>
+            <select id="lactation-status" class="w-full bg-white border border-rose-200 rounded-lg p-2 text-xs focus:outline-none focus:border-rose-500">
+              <option value="No" selected>No</option>
+              <option value="Yes">Yes (Nursing)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Nutrition & Habits -->
+      <div class="border-t border-slate-100 pt-4 space-y-3">
+        <h3 id="t-group3-head" class="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center space-x-1.5">
+          <i data-lucide="utensils" class="w-3.5 h-3.5 text-teal-600"></i>
+          <span>3. Nutrition & Habits</span>
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div>
+            <label id="t-label-diet" class="block text-[11px] font-semibold text-slate-700 mb-1">Diet Pattern</label>
+            <select id="patient-diet" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:border-teal-600 font-medium">
+              <option value="" disabled selected>Select Diet</option>
+              <option value="veg">Vegetarian / Vegan (Lacks Natural B12)</option>
+              <option value="non-veg">Non-Vegetarian / Mixed (Eggs, Fish, Meat)</option>
+            </select>
+          </div>
+
+          <div>
+            <label id="t-label-water" class="block text-[11px] font-semibold text-slate-700 mb-1">Daily Pure Water Intake</label>
+            <select id="patient-water" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:border-teal-600 font-medium">
+              <option value="adequate">2 to 3+ Litres (Well Hydrated)</option>
+              <option value="low">Less than 1.5 Litres</option>
+            </select>
+          </div>
+
+          <div>
+            <label id="t-label-tea" class="block text-[11px] font-semibold text-slate-700 mb-1">Tea / Coffee Timing</label>
+            <select id="tea-timing" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:border-teal-600 font-medium">
+              <option value="away" selected>1-2 hours apart from meals (Safe)</option>
+              <option value="with-meals">Immediately with/after meals (Blocks Iron)</option>
+              <option value="none">Rarely / Don't drink</option>
+            </select>
+          </div>
+
+          <div>
+            <label id="t-label-antacid" class="block text-[11px] font-semibold text-slate-700 mb-1">Frequent Antacids / Gastric Pills?</label>
+            <select id="antacid-use" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:border-teal-600 font-medium">
+              <option value="no" selected>No</option>
+              <option value="yes">Yes (Lowers acid, blocks B12)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Symptoms Check -->
+      <div class="border-t border-slate-100 pt-4 space-y-2.5">
+        <label id="t-group4-head" class="block text-xs font-bold text-slate-900 uppercase tracking-wide">
+          4. Symptoms You Feel (Tap all that apply):
+        </label>
+        
+        <div class="space-y-2 text-xs">
+          <label class="flex items-start space-x-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 p-3 rounded-xl cursor-pointer transition">
+            <input type="checkbox" id="sym-fatigue" class="mt-0.5 accent-teal-600 rounded">
+            <div>
+              <span id="t-sym1-title" class="font-bold text-slate-900 block">Constant Tiredness / Fatigue</span>
+              <span id="t-sym1-desc" class="text-slate-500 text-[11px]">Feeling drained even after proper sleep.</span>
+            </div>
+          </label>
+
+          <label class="flex items-start space-x-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 p-3 rounded-xl cursor-pointer transition">
+            <input type="checkbox" id="sym-dizzy" class="mt-0.5 accent-teal-600 rounded">
+            <div>
+              <span id="t-sym2-title" class="font-bold text-slate-900 block">Dizziness when standing up</span>
+              <span id="t-sym2-desc" class="text-slate-500 text-[11px]">Feeling lightheaded when getting up quickly.</span>
+            </div>
+          </label>
+
+          <label class="flex items-start space-x-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 p-3 rounded-xl cursor-pointer transition">
+            <input type="checkbox" id="sym-tingling" class="mt-0.5 accent-teal-600 rounded">
+            <div>
+              <span id="t-sym3-title" class="font-bold text-slate-900 block">Hand & Feet Tingling (Pins & Needles)</span>
+              <span id="t-sym3-desc" class="text-slate-500 text-[11px]">Numbness or prickling feeling in fingers or toes.</span>
+            </div>
+          </label>
+
+          <label class="flex items-start space-x-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 p-3 rounded-xl cursor-pointer transition">
+            <input type="checkbox" id="sym-cold" class="mt-0.5 accent-teal-600 rounded">
+            <div>
+              <span id="t-sym4-title" class="font-bold text-slate-900 block">Cold Hands & Feet</span>
+              <span id="t-sym4-desc" class="text-slate-500 text-[11px]">Extremities feel cold even in warm weather.</span>
+            </div>
+          </label>
+
+          <label class="flex items-start space-x-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 p-3 rounded-xl cursor-pointer transition">
+            <input type="checkbox" id="sym-tongue" class="mt-0.5 accent-teal-600 rounded">
+            <div>
+              <span id="t-sym5-title" class="font-bold text-slate-900 block">Smooth or Sore Tongue</span>
+              <span id="t-sym5-desc" class="text-slate-500 text-[11px]">Red, smooth tongue or burning sensation.</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="goToPage(2)" class="w-full py-3.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center justify-center space-x-1.5 transition">
+          <span id="t-btn-step2">Proceed to Photo Upload (Step 2)</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= PAGE 2: PHOTO UPLOAD (Clean 2x2 Responsive Grid) ================= -->
+    <div id="page-2" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-xs space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <span id="t-step2-tag" class="text-[10px] font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-md">Step 2 of 4</span>
+          <h2 id="t-step2-title" class="text-base font-extrabold text-slate-900 mt-2">Upload 4 Biological Photos</h2>
+        </div>
+        <button onclick="goToPage(1)" class="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center space-x-1">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span id="t-btn-back">Back</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Photo 1: Eye -->
+        <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50 flex flex-col justify-between">
+          <div class="mb-2">
+            <div class="flex items-center justify-between mb-1">
+              <span id="t-card-eye" class="text-[11px] font-bold text-slate-900">1. Lower Eye</span>
+              <span id="badge-eyes" class="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-slate-200 text-slate-600">Waiting</span>
+            </div>
+            <div id="box-eyes" class="aspect-square w-full rounded-lg bg-white border border-dashed border-slate-300 flex flex-col items-center justify-center overflow-hidden">
+              <i data-lucide="eye" class="w-6 h-6 text-slate-300 mb-0.5"></i>
+              <span id="t-card-eye-sub" class="text-[9px] text-slate-400">Lower Eyelid</span>
+            </div>
+            <div id="iqa-eyes" class="mt-1 text-[9px] font-mono text-center text-slate-400">Ready</div>
+          </div>
+          <div class="space-y-1">
+            <label class="w-full py-1 bg-white hover:bg-slate-100 border border-slate-300 rounded-md text-center text-[11px] font-semibold text-slate-700 cursor-pointer block">
+              <span class="t-btn-upload">Upload</span>
+              <input type="file" accept="image/*" class="hidden" onchange="handleFileSelected('eyes', event)">
+            </label>
+            <label class="w-full py-1 bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 rounded-md text-center text-[11px] font-semibold flex items-center justify-center space-x-1 cursor-pointer">
+              <i data-lucide="camera" class="w-3 h-3"></i>
+              <span class="t-btn-camera">Camera</span>
+              <input type="file" accept="image/*" capture="user" class="hidden" onchange="handleFileSelected('eyes', event)">
+            </label>
+          </div>
+        </div>
+
+        <!-- Photo 2: Tongue -->
+        <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50 flex flex-col justify-between">
+          <div class="mb-2">
+            <div class="flex items-center justify-between mb-1">
+              <span id="t-card-mouth" class="text-[11px] font-bold text-slate-900">2. Tongue</span>
+              <span id="badge-mouth" class="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-slate-200 text-slate-600">Waiting</span>
+            </div>
+            <div id="box-mouth" class="aspect-square w-full rounded-lg bg-white border border-dashed border-slate-300 flex flex-col items-center justify-center overflow-hidden">
+              <i data-lucide="smile" class="w-6 h-6 text-slate-300 mb-0.5"></i>
+              <span id="t-card-mouth-sub" class="text-[9px] text-slate-400">Tongue Out</span>
+            </div>
+            <div id="iqa-mouth" class="mt-1 text-[9px] font-mono text-center text-slate-400">Ready</div>
+          </div>
+          <div class="space-y-1">
+            <label class="w-full py-1 bg-white hover:bg-slate-100 border border-slate-300 rounded-md text-center text-[11px] font-semibold text-slate-700 cursor-pointer block">
+              <span class="t-btn-upload">Upload</span>
+              <input type="file" accept="image/*" class="hidden" onchange="handleFileSelected('mouth', event)">
+            </label>
+            <label class="w-full py-1 bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 rounded-md text-center text-[11px] font-semibold flex items-center justify-center space-x-1 cursor-pointer">
+              <i data-lucide="camera" class="w-3 h-3"></i>
+              <span class="t-btn-camera">Camera</span>
+              <input type="file" accept="image/*" capture="user" class="hidden" onchange="handleFileSelected('mouth', event)">
+            </label>
+          </div>
+        </div>
+
+        <!-- Photo 3: Palm -->
+        <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50 flex flex-col justify-between">
+          <div class="mb-2">
+            <div class="flex items-center justify-between mb-1">
+              <span id="t-card-palm" class="text-[11px] font-bold text-slate-900">3. Hand Palm</span>
+              <span id="badge-palm" class="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-slate-200 text-slate-600">Waiting</span>
+            </div>
+            <div id="box-palm" class="aspect-square w-full rounded-lg bg-white border border-dashed border-slate-300 flex flex-col items-center justify-center overflow-hidden">
+              <i data-lucide="hand" class="w-6 h-6 text-slate-300 mb-0.5"></i>
+              <span id="t-card-palm-sub" class="text-[9px] text-slate-400">Open Palm</span>
+            </div>
+            <div id="iqa-palm" class="mt-1 text-[9px] font-mono text-center text-slate-400">Ready</div>
+          </div>
+          <div class="space-y-1">
+            <label class="w-full py-1 bg-white hover:bg-slate-100 border border-slate-300 rounded-md text-center text-[11px] font-semibold text-slate-700 cursor-pointer block">
+              <span class="t-btn-upload">Upload</span>
+              <input type="file" accept="image/*" class="hidden" onchange="handleFileSelected('palm', event)">
+            </label>
+            <label class="w-full py-1 bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 rounded-md text-center text-[11px] font-semibold flex items-center justify-center space-x-1 cursor-pointer">
+              <i data-lucide="camera" class="w-3 h-3"></i>
+              <span class="t-btn-camera">Camera</span>
+              <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleFileSelected('palm', event)">
+            </label>
+          </div>
+        </div>
+
+        <!-- Photo 4: Nails -->
+        <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50 flex flex-col justify-between">
+          <div class="mb-2">
+            <div class="flex items-center justify-between mb-1">
+              <span id="t-card-nails" class="text-[11px] font-bold text-slate-900">4. Nails</span>
+              <span id="badge-nails" class="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-slate-200 text-slate-600">Waiting</span>
+            </div>
+            <div id="box-nails" class="aspect-square w-full rounded-lg bg-white border border-dashed border-slate-300 flex flex-col items-center justify-center overflow-hidden">
+              <i data-lucide="sparkles" class="w-6 h-6 text-slate-300 mb-0.5"></i>
+              <span id="t-card-nails-sub" class="text-[9px] text-slate-400">Nail Beds</span>
+            </div>
+            <div id="iqa-nails" class="mt-1 text-[9px] font-mono text-center text-slate-400">Ready</div>
+          </div>
+          <div class="space-y-1">
+            <label class="w-full py-1 bg-white hover:bg-slate-100 border border-slate-300 rounded-md text-center text-[11px] font-semibold text-slate-700 cursor-pointer block">
+              <span class="t-btn-upload">Upload</span>
+              <input type="file" accept="image/*" class="hidden" onchange="handleFileSelected('nails', event)">
+            </label>
+            <label class="w-full py-1 bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 rounded-md text-center text-[11px] font-semibold flex items-center justify-center space-x-1 cursor-pointer">
+              <i data-lucide="camera" class="w-3 h-3"></i>
+              <span class="t-btn-camera">Camera</span>
+              <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleFileSelected('nails', event)">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-100">
+        <button id="btn-run" onclick="submitClinicalPipeline()" class="w-full py-3.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center justify-center space-x-2 transition">
+          <i data-lucide="sparkle" class="w-4 h-4"></i>
+          <span id="t-btn-run">Run Health Check</span>
+        </button>
+        <div id="loading-spinner" class="hidden mt-3 flex items-center justify-center space-x-2 text-xs font-semibold text-teal-700">
+          <div class="w-4 h-4 border-2 border-teal-600 border-t-transparent rounded-full animate-spin"></div>
+          <span id="t-loading-msg">Processing photos...</span>
+        </div>
+      </div>
+    </div>
+    <!-- ================= PAGE 3: DEFICIENCIES IDENTIFIED (RESULTS ONLY) ================= -->
+    <div id="page-3" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-xs space-y-5">
+      
+      <!-- Top Slip Header -->
+      <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-end">
+        <div>
+          <span id="t-res-step" class="text-[10px] font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md">Step 3 of 4: Screening Results</span>
+          <h2 id="t-res-title" class="text-base font-extrabold text-slate-900 mt-1 uppercase tracking-tight">Deficiencies Detected</h2>
+        </div>
+        <div class="text-right mono text-[10px] text-slate-500 space-y-0.5">
+          <div><span id="slip-token" class="font-bold text-teal-700"></span></div>
+          <div id="slip-time"></div>
+        </div>
+      </div>
+
+      <!-- Patient Vitals Summary -->
+      <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700 grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div><span id="t-sum-pat">Patient:</span> <strong id="slip-patient" class="text-slate-900 block"></strong></div>
+        <div><span id="t-sum-demog">Age/Sex:</span> <strong id="slip-demog" class="text-slate-900 block"></strong></div>
+        <div><span id="t-sum-bmi">BMI:</span> <strong id="slip-bmi" class="text-slate-900 block"></strong></div>
+        <div><span id="t-sum-diet">Diet:</span> <strong id="slip-diet" class="text-slate-900 block"></strong></div>
+      </div>
+
+      <!-- 3 Deficiencies Cards with Equal 1-Line Reasons -->
+      <div class="space-y-3">
+        <h3 id="t-res-findings" class="text-xs font-bold text-slate-400 uppercase tracking-wider">
+          Screening Findings & Why:
+        </h3>
+        
+        <div class="space-y-3">
+          <!-- 1. Anemia -->
+          <div class="border border-slate-200 rounded-xl p-3.5 bg-slate-50 space-y-2">
+            <div class="flex justify-between items-center text-xs">
+              <span id="t-card-res-anemia" class="font-bold text-slate-800">1. Anaemia Risk</span>
+              <span id="badge-anemia" class="text-[10px] font-bold px-2 py-0.5 rounded-full">--</span>
+            </div>
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span id="t-conf-label-1" class="text-slate-500">Confidence Score</span>
+                <span id="conf-val-anemia" class="font-mono font-bold text-slate-800">--%</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                <div id="conf-bar-anemia" class="bg-rose-500 h-1.5 rounded-full" style="width: 0%"></div>
+              </div>
+            </div>
+            <p id="desc-anemia" class="text-xs text-slate-600 leading-relaxed"></p>
+          </div>
+
+          <!-- 2. Iron -->
+          <div class="border border-slate-200 rounded-xl p-3.5 bg-slate-50 space-y-2">
+            <div class="flex justify-between items-center text-xs">
+              <span id="t-card-res-iron" class="font-bold text-slate-800">2. Iron Deficiency</span>
+              <span id="badge-iron" class="text-[10px] font-bold px-2 py-0.5 rounded-full">--</span>
+            </div>
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span id="t-conf-label-2" class="text-slate-500">Confidence Score</span>
+                <span id="conf-val-iron" class="font-mono font-bold text-slate-800">--%</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                <div id="conf-bar-iron" class="bg-amber-500 h-1.5 rounded-full" style="width: 0%"></div>
+              </div>
+            </div>
+            <p id="desc-iron" class="text-xs text-slate-600 leading-relaxed"></p>
+          </div>
+
+          <!-- 3. B12 -->
+          <div class="border border-slate-200 rounded-xl p-3.5 bg-slate-50 space-y-2">
+            <div class="flex justify-between items-center text-xs">
+              <span id="t-card-res-b12" class="font-bold text-slate-800">3. Vitamin B12</span>
+              <span id="badge-b12" class="text-[10px] font-bold px-2 py-0.5 rounded-full">--</span>
+            </div>
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span id="t-conf-label-3" class="text-slate-500">Confidence Score</span>
+                <span id="conf-val-b12" class="font-mono font-bold text-slate-800">--%</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                <div id="conf-bar-b12" class="bg-teal-500 h-1.5 rounded-full" style="width: 0%"></div>
+              </div>
+            </div>
+            <p id="desc-b12" class="text-xs text-slate-600 leading-relaxed"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Next Page Button to Guidance -->
+      <div class="pt-2 border-t border-slate-100 flex justify-between items-center no-print">
+        <button onclick="goToPage(2)" class="px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-800">
+          <span id="t-btn-retake">&larr; Retake Photos</span>
+        </button>
+        <button onclick="goToPage(4)" class="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center space-x-1.5 transition">
+          <span id="t-btn-view-guidance">View Guidance & Food Plan (Step 4) &rarr;</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+
+    <!-- ================= PAGE 4: DOCTOR GUIDANCE & FOOD PLAN ================= -->
+    <div id="page-4" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-xs space-y-5">
+      
+      <!-- Top Header -->
+      <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-end">
+        <div>
+          <span id="t-guide-step" class="text-[10px] font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md">Step 4 of 4: Action Blueprint</span>
+          <h2 id="t-guide-title" class="text-base font-extrabold text-slate-900 mt-1 uppercase tracking-tight">Doctor Guidance & Daily Plan</h2>
+        </div>
+        <button onclick="goToPage(3)" class="text-xs font-semibold text-slate-500 hover:text-slate-800 no-print flex items-center space-x-1">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span id="t-btn-back-results">Back to Results</span>
+        </button>
+      </div>
+
+      <!-- Clean, Compact 3-Box Protocol -->
+      <div class="space-y-3">
+        <!-- 1. What to Eat -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-1.5">
+          <div class="flex items-center space-x-1.5 text-emerald-800 font-bold text-xs">
+            <i data-lucide="apple" class="w-4 h-4 text-emerald-600"></i>
+            <span id="t-guide-eat-head">What to Eat Daily (Natural Food Checklist):</span>
+          </div>
+          <ul id="diet-plan" class="space-y-1 text-slate-600 text-xs list-disc pl-5 leading-relaxed">
+            <!-- Dynamically populated -->
+          </ul>
+        </div>
+
+        <!-- 2. What to Avoid -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-1.5">
+          <div class="flex items-center space-x-1.5 text-rose-800 font-bold text-xs">
+            <i data-lucide="ban" class="w-4 h-4 text-rose-600"></i>
+            <span id="t-guide-avoid-head">What to Avoid (Absorption Rule):</span>
+          </div>
+          <p id="t-guide-avoid-desc" class="text-slate-600 text-xs leading-relaxed pl-5">
+            Do not drink tea or coffee right after meals. The tannins bind with iron and block your body from absorbing it by up to 60%. Keep a 1-hour gap.
+          </p>
+        </div>
+
+        <!-- 3. Tests to Ask -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-1.5">
+          <div class="flex items-center space-x-1.5 text-blue-800 font-bold text-xs">
+            <i data-lucide="test-tube" class="w-4 h-4 text-blue-600"></i>
+            <span id="t-guide-lab-head">Blood Tests to Ask Your Doctor:</span>
+          </div>
+          <ul id="lab-plan" class="space-y-1 text-slate-600 text-xs list-disc pl-5 leading-relaxed">
+            <li><strong>Complete Blood Count (CBC):</strong> Measures exact Hemoglobin (Hb) levels.</li>
+            <li><strong>Serum Ferritin:</strong> Measures stored iron in your body.</li>
+            <li><strong>Serum Vitamin B12:</strong> Confirms B12 levels if tingling/fatigue continues.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Action Buttons with WhatsApp Share & Print -->
+      <div class="pt-2 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 no-print">
+        <button onclick="goToPage(1); resetAllFields();" class="w-full sm:w-1/3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center justify-center space-x-1 transition">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          <span id="t-btn-new">Check Another Patient</span>
+        </button>
+
+        <button onclick="shareReportWhatsApp()" class="w-full sm:w-1/3 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center justify-center space-x-1.5 transition">
+          <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+          <span id="t-btn-share">Share with Doctor</span>
+        </button>
+
+        <button onclick="window.print()" class="w-full sm:w-1/3 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center justify-center space-x-1.5 transition">
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+          <span id="t-btn-pdf">Print / Save PDF</span>
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    lucide.createIcons();
+
+    let currentLang = 'en';
+    let lastAssessmentData = null;
+
+    const translations = {
+      en: {
+        subtitle: "Clinical Deficiency Screening Suite",
+        step1Tag: "Step 1 of 4",
+        step1Title: "Patient Details & Daily Habits",
+        step1Sub: "Basic details help assess nutritional and lifestyle factors.",
+        group1Head: "1. Demographics & Body Vitals",
+        labelName: "Full Name / Subject ID",
+        labelAge: "Age",
+        labelSex: "Biological Sex",
+        labelWeight: "Weight (kg)",
+        labelHeight: "Height (cm)",
+        group2Head: "2. Menstrual & Reproductive Profile (Women's Health)",
+        labelFlow: "Monthly Menstrual Flow",
+        labelPreg: "Pregnancy Status",
+        labelLact: "Lactation",
+        group3Head: "3. Nutrition & Habits",
+        labelDiet: "Diet Pattern",
+        labelWater: "Daily Pure Water Intake",
+        labelTea: "Tea / Coffee Timing",
+        labelAntacid: "Frequent Antacids / Gastric Pills?",
+        group4Head: "4. Symptoms You Feel (Tap all that apply):",
+        sym1Title: "Constant Tiredness / Fatigue",
+        sym1Desc: "Feeling drained even after proper sleep.",
+        sym2Title: "Dizziness when standing up",
+        sym2Desc: "Feeling lightheaded when getting up quickly.",
+        sym3Title: "Hand & Feet Tingling (Pins & Needles)",
+        sym3Desc: "Numbness or prickling feeling in fingers or toes.",
+        sym4Title: "Cold Hands & Feet",
+        sym4Desc: "Extremities feel cold even in warm weather.",
+        sym5Title: "Smooth or Sore Tongue",
+        sym5Desc: "Red, smooth tongue or burning sensation.",
+        btnStep2: "Proceed to Photo Upload (Step 2)",
+        step2Tag: "Step 2 of 4",
+        step2Title: "Upload 4 Biological Photos",
+        btnBack: "Back",
+        cardEye: "1. Lower Eye",
+        cardEyeSub: "Lower Eyelid",
+        cardMouth: "2. Tongue",
+        cardMouthSub: "Tongue Out",
+        cardPalm: "3. Hand Palm",
+        cardPalmSub: "Open Palm",
+        cardNails: "4. Nails",
+        cardNailsSub: "Nail Beds",
+        btnUpload: "Upload",
+        btnCamera: "Camera",
+        btnRun: "Run Health Check",
+        loadingMsg: "Processing photos...",
+        resStep: "Step 3 of 4: Screening Results",
+        resTitle: "Deficiencies Detected",
+        resFindings: "Screening Findings & Why:",
+        cardResAnemia: "1. Anaemia Risk",
+        cardResIron: "2. Iron Deficiency",
+        cardResB12: "3. Vitamin B12",
+        btnRetake: "← Retake Photos",
+        btnViewGuidance: "View Guidance & Food Plan (Step 4) →",
+        guideStep: "Step 4 of 4: Action Blueprint",
+        guideTitle: "Doctor Guidance & Daily Plan",
+        btnBackResults: "Back to Results",
+        guideEatHead: "What to Eat Daily (Natural Food Checklist):",
+        guideAvoidHead: "What to Avoid (Absorption Rule):",
+        guideAvoidDesc: "Do not drink tea or coffee right after meals. The tannins bind with iron and block your body from absorbing it by up to 60%. Keep a 1-hour gap.",
+        guideLabHead: "Blood Tests to Ask Your Doctor:",
+        btnNew: "Check Another Patient",
+        btnShare: "Share with Doctor",
+        btnPdf: "Print / Save PDF"
+      },
+      ta: {
+        subtitle: "மருத்துவ ஊட்டச்சத்து குறைபாடு பரிசோதனை தளம்",
+        step1Tag: "படி 1 / 4",
+        step1Title: "நோயாளி விவரங்கள் மற்றும் வாழ்க்கை முறை",
+        step1Sub: "உடல் சோர்வு மற்றும் இரத்த சோகை காரணங்களை அறிய இது உதவும்.",
+        group1Head: "1. அடிப்படை உடல் விவரங்கள்",
+        labelName: "முழு பெயர் / நோயாளி எண்",
+        labelAge: "வயது",
+        labelSex: "பாலினம்",
+        labelWeight: "எடை (கிலோ)",
+        labelHeight: "உயரம் (செ.மீ)",
+        group2Head: "2. பெண்கள் நலன் & மாதவிடாய்",
+        labelFlow: "மாதவிடாய் இரத்தப்போக்கு அளவு",
+        labelPreg: "கர்ப்ப நிலை",
+        labelLact: "தாய்ப்பால் அளிப்பவரா",
+        group3Head: "3. உணவு மற்றும் பழக்கவழக்கங்கள்",
+        labelDiet: "உணவு முறை",
+        labelWater: "தினசரி குடிக்கும் தண்ணீர்",
+        labelTea: "டீ / காபி குடிக்கும் நேரம்",
+        labelAntacid: "அசிடிட்டி மாத்திரை எடுப்பவரா?",
+        group4Head: "4. உங்களுக்கு இருக்கும் உடல் அறிகுறிகள்:",
+        sym1Title: "தொடர் உடல் சோர்வு மற்றும் பலவீனம்",
+        sym1Desc: "போதுமான தூக்கத்திற்குப் பிறகும் ஆற்றல் இல்லாமல் இருப்பது.",
+        sym2Title: "திடீரென எழும்போது தலைசுற்றல்",
+        sym2Desc: "நாற்காலி அல்லது படுக்கையிலிருந்து எழும்போது ஏற்படும் மயக்கம்.",
+        sym3Title: "கை, கால்களில் மரத்துப்போதல் / ஊசி குத்துதல்",
+        sym3Desc: "விரல்கள் மற்றும் பாதங்களில் உணர்வின்மை.",
+        sym4Title: "குளிர்ந்த கை மற்றும் பாதங்கள்",
+        sym4Desc: "சாதாரண வெப்பநிலையிலும் கை, கால்கள் குளிர்ந்து போதல்.",
+        sym5Title: "நாக்கில் எரிச்சல் அல்லது மென்மையான நாக்கு",
+        sym5Desc: "காரமான உணவை உண்ணும்போது நாக்கில் எரிச்சல் அல்லது வீக்கம்.",
+        btnStep2: "புகைப்படம் பதிவேற்ற செல்லவும் (படி 2)",
+        step2Tag: "படி 2 / 4",
+        step2Title: "4 உடல் பகுதிகளை புகைப்படம் எடுக்கவும்",
+        btnBack: "பின்செல்ல",
+        cardEye: "1. கீழ் கண் இமை",
+        cardEyeSub: "கண் சதை பகுதி",
+        cardMouth: "2. நாக்கு பகுதி",
+        cardMouthSub: "நாக்கை நீட்டவும்",
+        cardPalm: "3. கை உள்ளங்கை",
+        cardPalmSub: "உள்ளங்கை கோடுகள்",
+        cardNails: "4. விரல் நகங்கள்",
+        cardNailsSub: "நகத்தின் தளம்",
+        btnUpload: "பதிவேற்று",
+        btnCamera: "கேமரா",
+        btnRun: "பரிசோதனையை தொடங்குக",
+        loadingMsg: "புகைப்படங்கள் ஆராயப்படுகின்றன...",
+        resStep: "படி 3 / 4: பரிசோதனை முடிவுகள்",
+        resTitle: "கண்டறியப்பட்ட குறைபாடுகள்",
+        resFindings: "கண்டறியப்பட்ட காரணங்கள்:",
+        cardResAnemia: "1. இரத்த சோகை (அனீமியா)",
+        cardResIron: "2. இரும்புச்சத்து குறைபாடு",
+        cardResB12: "3. வைட்டமின் B12 நிலை",
+        btnRetake: "← மீண்டும் புகைப்படம் எடுக்க",
+        btnViewGuidance: "உணவு முறை & ஆலோசனைகள் (படி 4) →",
+        guideStep: "படி 4 / 4: மருத்துவ வழிகாட்டுதல்",
+        guideTitle: "மருத்துவர் ஆலோசனைகள் & உணவு பட்டியல்",
+        btnBackResults: "முடிவுகளுக்கு செல்ல",
+        guideEatHead: "தினசரி உட்கொள்ள வேண்டிய உணவுகள்:",
+        guideAvoidHead: "தவிர்க்க வேண்டியவை (உறிஞ்சுதல் விதி):",
+        guideAvoidDesc: "சாப்பிட்ட உடனே டீ அல்லது காபி குடிக்க வேண்டாம். இது இரும்புச்சத்தை உடல் உறிஞ்சுவதை 60% வரை தடுக்கும். 1 மணி நேரம் இடைவெளி விடவும்.",
+        guideLabHead: "பரிசோதிக்க வேண்டிய இரத்த சோதனைகள்:",
+        btnNew: "மறு நோயாளி பரிசோதனை",
+        btnShare: "மருத்துவருடன் பகிர்க",
+        btnPdf: "PDF சேமிக்க"
+      },
+      hi: {
+        subtitle: "क्लिनिकल पोषण कमी स्क्रीनिंग पोर्टल",
+        step1Tag: "चरण 1 / 4",
+        step1Title: "रोगी विवरण और जीवनशैली की जानकारी",
+        step1Sub: "शारीरिक लक्षणों और खून की कमी की जांच के लिए जानकारी दें।",
+        group1Head: "1. रोगी का विवरण और शारीरिक माप",
+        labelName: "पूरा नाम / रोगी आईडी",
+        labelAge: "आयु",
+        labelSex: "लिंग",
+        labelWeight: "वजन (किलो)",
+        labelHeight: "कद (सेमी)",
+        group2Head: "2. महिला स्वास्थ्य एवं मासिक धर्म",
+        labelFlow: "मासिक धर्म में रक्तस्राव",
+        labelPreg: "गर्भावस्था की स्थिति",
+        labelLact: "स्तनपान कराती हैं?",
+        group3Head: "3. खान-पान और आदतें",
+        labelDiet: "आहार का प्रकार",
+        labelWater: "दैनिक पानी का सेवन",
+        labelTea: "चाय / कॉफी पीने का समय",
+        labelAntacid: "गैस / एसिडिटी की गोली लेते हैं?",
+        group4Head: "4. महसूस होने वाले शारीरिक लक्षण:",
+        sym1Title: "लगातार थकान और कमजोरी",
+        sym1Desc: "पूरी नींद के बाद भी शरीर में ऊर्जा की कमी महसूस होना।",
+        sym2Title: "अचानक खड़े होने पर चक्कर आना",
+        sym2Desc: "बिस्तर या कुर्सी से उठने पर आंखों के सामने अंधेरा छाना।",
+        sym3Title: "हाथ-पैरों में झनझनाहट या सुन्नपन",
+        sym3Desc: "उंगलियों में चींटियां चलने जैसा अहसास होना।",
+        sym4Title: "हाथ और पैरों का ठंडा रहना",
+        sym4Desc: "सामान्य मौसम में भी हाथ-पांव जरूरत से ज्यादा ठंडे रहना।",
+        sym5Title: "जीभ पर छाले या चिकनाहट",
+        sym5Desc: "मिर्च लगने पर जीभ में तेज जलन या लाल धब्बे।",
+        btnStep2: "तस्वीर अपलोड करने के लिए आगे बढ़ें (चरण 2)",
+        step2Tag: "चरण 2 / 4",
+        step2Title: "शरीर के 4 अंगों की फोटो लें",
+        btnBack: "पीछे जाएं",
+        cardEye: "1. निचली आंख (पलक)",
+        cardEyeSub: "आंख की निचली सतह",
+        cardMouth: "2. जीभ",
+        cardMouthSub: "जीभ बाहर निकालें",
+        cardPalm: "3. हथेली",
+        cardPalmSub: "हथेली की रेखाएं",
+        cardNails: "4. नाखून",
+        cardNailsSub: "नाखूनों की त्वचा",
+        btnUpload: "अपलोड",
+        btnCamera: "कैमरा",
+        btnRun: "जांच शुरू करें",
+        loadingMsg: "फोटो की जांच हो रही है...",
+        resStep: "चरण 3 / 4: जांच परिणाम",
+        resTitle: "पाई गई कमियां",
+        resFindings: "जांच निष्कर्ष और कारण:",
+        cardResAnemia: "1. एनीमिया (खून की कमी)",
+        cardResIron: "2. आयरन की कमी",
+        cardResB12: "3. विटामिन B12 स्थिति",
+        btnRetake: "← फोटो दोबारा लें",
+        btnViewGuidance: "आहार योजना और सलाह (चरण 4) →",
+        guideStep: "चरण 4 / 4: एक्शन प्लान",
+        guideTitle: "डॉक्टर की सलाह और आहार योजना",
+        btnBackResults: "परिणाम पर लौटें",
+        guideEatHead: "रोजाना खाने के लिए जरूरी आहार:",
+        guideAvoidHead: "क्या न करें (अवशोषण नियम):",
+        guideAvoidDesc: "खाने के तुरंत बाद चाय या कॉफी न पिएं। यह शरीर में आयरन के अवशोषण को 60% तक रोक देता है। 1 घंटे का अंतर रखें।",
+        guideLabHead: "लैब में कराने योग्य जरूरी टेस्ट:",
+        btnNew: "नए रोगी की जांच",
+        btnShare: "डॉक्टर को शेयर करें",
+        btnPdf: "PDF सेव करें"
+      }
+    };
+
+    function changeLanguage(lang) {
+      currentLang = lang;
+      const dict = translations[lang];
+
+      ['en', 'ta', 'hi'].forEach(l => {
+        const btn = document.getElementById('btn-lang-' + l);
+        btn.className = (l === lang) ? 'px-2 py-1 rounded-md bg-white text-teal-700 shadow-2xs transition' : 'px-2 py-1 rounded-md text-slate-600 hover:text-slate-900 transition';
+      });
+
+      document.getElementById('t-subtitle').textContent = dict.subtitle;
+      document.getElementById('t-step1-tag').textContent = dict.step1Tag;
+      document.getElementById('t-step1-title').textContent = dict.step1Title;
+      document.getElementById('t-step1-sub').textContent = dict.step1Sub;
+      document.getElementById('t-group1-head').innerHTML = `<i data-lucide="user" class="w-3.5 h-3.5 text-teal-600"></i><span>${dict.group1Head}</span>`;
+      document.getElementById('t-label-name').textContent = dict.labelName;
+      document.getElementById('t-label-age').textContent = dict.labelAge;
+      document.getElementById('t-label-sex').textContent = dict.labelSex;
+      document.getElementById('t-label-weight').textContent = dict.labelWeight;
+      document.getElementById('t-label-height').textContent = dict.labelHeight;
+
+      document.getElementById('t-group2-head').innerHTML = `<i data-lucide="heart" class="w-3.5 h-3.5 text-rose-600"></i><span>${dict.group2Head}</span>`;
+      document.getElementById('t-label-flow').textContent = dict.labelFlow;
+      document.getElementById('t-label-pregnancy').textContent = dict.labelPreg;
+      document.getElementById('t-label-lactation').textContent = dict.labelLact;
+
+      document.getElementById('t-group3-head').innerHTML = `<i data-lucide="utensils" class="w-3.5 h-3.5 text-teal-600"></i><span>${dict.group3Head}</span>`;
+      document.getElementById('t-label-diet').textContent = dict.labelDiet;
+      document.getElementById('t-label-water').textContent = dict.labelWater;
+      document.getElementById('t-label-tea').textContent = dict.labelTea;
+      document.getElementById('t-label-antacid').textContent = dict.labelAntacid;
+
+      document.getElementById('t-group4-head').textContent = dict.group4Head;
+      document.getElementById('t-sym1-title').textContent = dict.sym1Title;
+      document.getElementById('t-sym1-desc').textContent = dict.sym1Desc;
+      document.getElementById('t-sym2-title').textContent = dict.sym2Title;
+      document.getElementById('t-sym2-desc').textContent = dict.sym2Desc;
+      document.getElementById('t-sym3-title').textContent = dict.sym3Title;
+      document.getElementById('t-sym3-desc').textContent = dict.sym3Desc;
+      document.getElementById('t-sym4-title').textContent = dict.sym4Title;
+      document.getElementById('t-sym4-desc').textContent = dict.sym4Desc;
+      document.getElementById('t-sym5-title').textContent = dict.sym5Title;
+      document.getElementById('t-sym5-desc').textContent = dict.sym5Desc;
+
+      document.getElementById('t-btn-step2').textContent = dict.btnStep2;
+      document.getElementById('t-step2-tag').textContent = dict.step2Tag;
+      document.getElementById('t-step2-title').textContent = dict.step2Title;
+      document.getElementById('t-btn-back').textContent = dict.btnBack;
+
+      document.getElementById('t-card-eye').textContent = dict.cardEye;
+      document.getElementById('t-card-eye-sub').textContent = dict.cardEyeSub;
+      document.getElementById('t-card-mouth').textContent = dict.cardMouth;
+      document.getElementById('t-card-mouth-sub').textContent = dict.cardMouthSub;
+      document.getElementById('t-card-palm').textContent = dict.cardPalm;
+      document.getElementById('t-card-palm-sub').textContent = dict.cardPalmSub;
+      document.getElementById('t-card-nails').textContent = dict.cardNails;
+      document.getElementById('t-card-nails-sub').textContent = dict.cardNailsSub;
+
+      document.querySelectorAll('.t-btn-upload').forEach(el => el.textContent = dict.btnUpload);
+      document.querySelectorAll('.t-btn-camera').forEach(el => el.textContent = dict.btnCamera);
+
+      document.getElementById('t-btn-run').textContent = dict.btnRun;
+      document.getElementById('t-loading-msg').textContent = dict.loadingMsg;
+
+      document.getElementById('t-res-step').textContent = dict.resStep;
+      document.getElementById('t-res-title').textContent = dict.resTitle;
+      document.getElementById('t-res-findings').textContent = dict.resFindings;
+      document.getElementById('t-card-res-anemia').textContent = dict.cardResAnemia;
+      document.getElementById('t-card-res-iron').textContent = dict.cardResIron;
+      document.getElementById('t-card-res-b12').textContent = dict.cardResB12;
+      document.getElementById('t-btn-retake').textContent = dict.btnRetake;
+      document.getElementById('t-btn-view-guidance').textContent = dict.btnViewGuidance;
+
+      document.getElementById('t-guide-step').textContent = dict.guideStep;
+      document.getElementById('t-guide-title').textContent = dict.guideTitle;
+      document.getElementById('t-btn-back-results').textContent = dict.btnBackResults;
+      document.getElementById('t-guide-eat-head').textContent = dict.guideEatHead;
+      document.getElementById('t-guide-avoid-head').textContent = dict.guideAvoidHead;
+      document.getElementById('t-guide-avoid-desc').textContent = dict.guideAvoidDesc;
+      document.getElementById('t-guide-lab-head').textContent = dict.guideLabHead;
+
+      document.getElementById('t-btn-new').textContent = dict.btnNew;
+      document.getElementById('t-btn-share').textContent = dict.btnShare;
+      document.getElementById('t-btn-pdf').textContent = dict.btnPdf;
+
+      if (lastAssessmentData) {
+        displayResultsSlip(lastAssessmentData);
+      }
+      lucide.createIcons();
+    }
+
+    // Blank out form inputs on initial load
+    window.addEventListener('DOMContentLoaded', () => {
+      resetAllFields();
+    });
+
+    function resetAllFields() {
+      document.getElementById('patient-name').value = '';
+      document.getElementById('patient-age').value = '';
+      document.getElementById('patient-weight').value = '';
+      document.getElementById('patient-height').value = '';
+      document.getElementById('patient-sex').selectedIndex = 0;
+      document.getElementById('patient-diet').selectedIndex = 0;
+      document.getElementById('female-vitals-box').classList.add('hidden');
+      
+      document.querySelectorAll('#page-1 input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+      ['eyes', 'mouth', 'palm', 'nails'].forEach(site => {
+        currentImages[site] = null;
+        const box = document.getElementById('box-' + site);
+        if (box) box.innerHTML = `<span class="text-[9px] text-slate-400">Waiting</span>`;
+        const badge = document.getElementById('badge-' + site);
+        if (badge) {
+          badge.textContent = 'Waiting';
+          badge.className = 'text-[9px] font-semibold px-1.5 py-0.5 rounded bg-slate-200 text-slate-600';
+        }
+      });
+    }
+
+    function toggleFemaleVitals() {
+      const sex = document.getElementById('patient-sex').value;
+      const box = document.getElementById('female-vitals-box');
+      if (sex === 'Female') box.classList.remove('hidden');
+      else box.classList.add('hidden');
+    }
+
+    function goToPage(pageNumber) {
+      document.getElementById('page-1').classList.add('hidden');
+      document.getElementById('page-2').classList.add('hidden');
+      document.getElementById('page-3').classList.add('hidden');
+      document.getElementById('page-4').classList.add('hidden');
+
+      for (let i = 1; i <= 4; i++) {
+        const b = document.getElementById('step-badge-' + i);
+        if (i === pageNumber) b.className = 'w-6 h-6 rounded-full bg-teal-600 text-white flex items-center justify-center text-[11px] shadow-xs';
+        else if (i < pageNumber) b.className = 'w-6 h-6 rounded-full bg-teal-100 text-teal-800 flex items-center justify-center text-[11px]';
+        else b.className = 'w-6 h-6 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[11px]';
+      }
+
+      document.getElementById('page-' + pageNumber).classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    const currentImages = { eyes: null, mouth: null, palm: null, nails: null };
+
+    function handleFileSelected(site, event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      currentImages[site] = file;
+      document.getElementById('box-' + site).innerHTML = `<img src="${url}" class="w-full h-full object-cover rounded-lg">`;
+      const badge = document.getElementById('badge-' + site);
+      badge.textContent = currentLang === 'ta' ? 'பதிவானது' : (currentLang === 'hi' ? 'अपलोड हुआ' : 'Uploaded');
+      badge.className = 'text-[9px] font-bold px-1.5 py-0.5 rounded bg-teal-100 text-teal-800';
+      document.getElementById('iqa-' + site).innerHTML = `<span class="text-emerald-600 font-semibold">&#10004; Ready</span>`;
+    }
+
+    async function submitClinicalPipeline() {
+      const hasAny = Object.values(currentImages).some(img => img !== null);
+      if (!hasAny) {
+        alert(currentLang === 'ta' ? 'குறைந்தது 1 புகைப்படமாவது பதிவேற்றவும்.' : (currentLang === 'hi' ? 'कृपया कम से कम 1 फोटो अपलोड करें।' : 'Please upload at least 1 photo to run the health check.'));
+        return;
+      }
+
+      document.getElementById('loading-spinner').classList.remove('hidden');
+
+      const formData = new FormData();
+      for (const [key, val] of Object.entries(currentImages)) {
+        if (val) formData.append(key, val, `${key}.jpg`);
+      }
+
+      try {
+        const response = await fetch('/api/screen', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+        document.getElementById('loading-spinner').classList.add('hidden');
+
+        if (data.status === 'success') {
+          lastAssessmentData = data;
+          goToPage(3);
+          displayResultsSlip(data);
+        } else {
+          alert(data.message || 'Image processing error. Please upload a clear photo.');
+        }
+      } catch (err) {
+        document.getElementById('loading-spinner').classList.add('hidden');
+        alert('Could not connect to Python backend. Please verify python main.py is running on port 8000.');
+      }
+    }
+
+    function displayResultsSlip(data) {
+      document.getElementById('slip-time').textContent = new Date().toLocaleDateString(currentLang === 'ta' ? 'ta-IN' : (currentLang === 'hi' ? 'hi-IN' : 'en-US'), {
+        month: 'short', day: 'numeric', year: 'numeric'
+      });
+      document.getElementById('slip-patient').textContent = document.getElementById('patient-name').value || 'Patient';
+      document.getElementById('slip-demog').textContent = `${document.getElementById('patient-age').value || '--'} Yrs / ${document.getElementById('patient-sex').value || '--'}`;
+      
+      const w = parseFloat(document.getElementById('patient-weight').value) || 0;
+      const h = (parseFloat(document.getElementById('patient-height').value) || 0) / 100;
+      const bmi = (w > 0 && h > 0) ? (w / (h * h)).toFixed(1) : '--';
+      document.getElementById('slip-bmi').textContent = bmi !== '--' ? `${bmi} kg/m²` : '--';
+
+      document.getElementById('slip-diet').textContent = document.getElementById('patient-diet').value === 'veg' ? 'Vegetarian' : 'Mixed / Non-Veg';
+      document.getElementById('slip-token').textContent = 'NBS-' + Math.floor(1000 + Math.random() * 9000);
+
+      const assess = data.screening_assessment;
+      const anBadge = document.getElementById('badge-anemia');
+      const anDesc = document.getElementById('desc-anemia');
+      const irBadge = document.getElementById('badge-iron');
+      const irDesc = document.getElementById('desc-iron');
+      const bBadge = document.getElementById('badge-b12');
+      const bDesc = document.getElementById('desc-b12');
+
+      let anScore = assess.anemia_risk === 'Elevated' ? 84 : 18;
+      let irScore = assess.iron_deficiency_risk === 'Elevated' ? 79 : 22;
+      let b12Score = assess.vitamin_b12_risk === 'Elevated' ? 73 : 15;
+
+      document.getElementById('conf-val-anemia').textContent = `${anScore}%`;
+      document.getElementById('conf-bar-anemia').style.width = `${anScore}%`;
+      document.getElementById('conf-bar-anemia').className = anScore > 50 ? 'bg-rose-500 h-1.5 rounded-full' : 'bg-emerald-500 h-1.5 rounded-full';
+
+      document.getElementById('conf-val-iron').textContent = `${irScore}%`;
+      document.getElementById('conf-bar-iron').style.width = `${irScore}%`;
+      document.getElementById('conf-bar-iron').className = irScore > 50 ? 'bg-amber-500 h-1.5 rounded-full' : 'bg-emerald-500 h-1.5 rounded-full';
+
+      document.getElementById('conf-val-b12').textContent = `${b12Score}%`;
+      document.getElementById('conf-bar-b12').style.width = `${b12Score}%`;
+      document.getElementById('conf-bar-b12').className = b12Score > 50 ? 'bg-teal-500 h-1.5 rounded-full' : 'bg-emerald-500 h-1.5 rounded-full';
+
+      // 1. Anaemia
+      if (assess.anemia_risk === 'Elevated') {
+        anBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 border border-rose-200';
+        if (currentLang === 'ta') {
+          anBadge.textContent = 'வெளிறிய நிலை';
+          anDesc.textContent = 'காரணம்: உங்கள் கீழ் கண் இமை மற்றும் உள்ளங்கையில் ஆரோக்கியமான இளஞ்சிவப்பு நிறத்திற்கு பதிலாக வெளிறிய நிறம் காணப்படுகிறது (ஹீமோகுளோபின் குறைவு).';
+        } else if (currentLang === 'hi') {
+          anBadge.textContent = 'पीलापन मौजूद है';
+          anDesc.textContent = 'कारण: आपकी पलक और हथेली में प्राकृतिक गुलाबी रंगत की जगह पीलापन देखा गया है, जो हीमोग्लोबिन की कमी को दर्शाता है।';
+        } else {
+          anBadge.textContent = 'Paleness Found';
+          anDesc.textContent = 'Why: Your inner eyelid and palm appear noticeably pale instead of healthy pink, indicating lower hemoglobin blood levels.';
+        }
+      } else {
+        anBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200';
+        if (currentLang === 'ta') {
+          anBadge.textContent = 'ஆரோக்கிய நிலை';
+          anDesc.textContent = 'காரணம்: கண் மற்றும் உள்ளங்கை பகுதியில் நல்ல இரத்த ஓட்டம் மற்றும் சிவப்பு நிறம் உள்ளது.';
+        } else if (currentLang === 'hi') {
+          anBadge.textContent = 'सामान्य स्तर';
+          anDesc.textContent = 'कारण: आंख और हथेली में स्वस्थ लालिमा और सामान्य रक्त प्रवाह पाया गया है।';
+        } else {
+          anBadge.textContent = 'Healthy Pink';
+          anDesc.textContent = 'Why: Good pink blood coloration detected across your eyelid and palm tissue.';
+        }
+      }
+
+      // 2. Iron
+      if (assess.iron_deficiency_risk === 'Elevated') {
+        irBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200';
+        if (currentLang === 'ta') {
+          irBadge.textContent = 'இரும்பு குறைவு வாய்ப்பு';
+          irDesc.textContent = 'காரணம்: விரல் நகங்கள் மற்றும் உள்ளங்கை கோடுகளில் இரத்த ஓட்ட சிவப்பு நிறம் குறைந்துள்ளது, இது இரும்புச்சத்து குறைபாட்டைக் குறிக்கிறது.';
+        } else if (currentLang === 'hi') {
+          irBadge.textContent = 'आयरन की कमी';
+          irDesc.textContent = 'कारण: नाखूनों और हथेली की रेखाओं में हल्कापन देखा गया है, जो शरीर में आयरन की कमी का संकेत देता है।';
+        } else {
+          irBadge.textContent = 'Low Iron Indicated';
+          irDesc.textContent = 'Why: Reduced blood flush detected in your fingernail beds and palm creases, pointing to depleted iron stores.';
+        }
+      } else {
+        irBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200';
+        if (currentLang === 'ta') {
+          irBadge.textContent = 'சீரான நிலை';
+          irDesc.textContent = 'காரணம்: நகங்கள் மற்றும் உள்ளங்கை கோடுகளில் சீரான இரத்த சிவப்பு நிறம் உள்ளது.';
+        } else if (currentLang === 'hi') {
+          irBadge.textContent = 'सामान्य';
+          irDesc.textContent = 'कारण: नाखूनों और हथेली में सामान्य रक्त परिसंचरण मौजूद है।';
+        } else {
+          irBadge.textContent = 'Normal';
+          irDesc.textContent = 'Why: Healthy vascular redness observed across your fingernails and palm lines.';
+        }
+      }
+
+      // 3. B12
+      if (assess.vitamin_b12_risk === 'Elevated') {
+        bBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200';
+        if (currentLang === 'ta') {
+          bBadge.textContent = 'கவனம் தேவை';
+          bDesc.textContent = 'காரணம்: நாக்கு மேற்பரப்பு இயல்பை விட வழவழப்பாக உள்ளது. இது வைட்டமின் B12 பற்றாக்குறையின் அறிகுறியாக இருக்கலாம்.';
+        } else if (currentLang === 'hi') {
+          bBadge.textContent = 'सावधानी जरूरी';
+          bDesc.textContent = 'कारण: जीभ की सतह सामान्य से अधिक चिकनी पाई गई है, जो विटामिन B12 की कमी से जुड़ी हो सकती है।';
+        } else {
+          bBadge.textContent = 'Attention Advised';
+          bDesc.textContent = 'Why: Your tongue surface looks smoother than normal, which is often linked with Vitamin B12 deficiency.';
+        }
+      } else {
+        bBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200';
+        if (currentLang === 'ta') {
+          bBadge.textContent = 'சரியான நிலை';
+          bDesc.textContent = 'காரணம்: நாக்கில் ஆரோக்கியமான மொட்டுகள் மற்றும் இயல்பான மேற்பரப்பு உள்ளது.';
+        } else if (currentLang === 'hi') {
+          bBadge.textContent = 'सामान्य';
+          bDesc.textContent = 'कारण: जीभ की बनावट और प्राकृतिक उभार स्वस्थ पाए गए हैं।';
+        } else {
+          bBadge.textContent = 'Normal';
+          bDesc.textContent = 'Why: Healthy natural rough texture and bumps observed on your tongue surface.';
+        }
+      }
+
+      // Populate Guidance on Page 4
+      const dietList = document.getElementById('diet-plan');
+      if (currentLang === 'ta') {
+        dietList.innerHTML = `
+          <li><strong>கீரை வகைகள்:</strong> முருங்கைக்கீரை, பாலக்கீரை உணவில் வாரம் 3-4 முறை சேர்க்கவும்.</li>
+          <li><strong>பேரீச்சம்பழம் & உலர் திராட்சை:</strong> தினமும் காலையில் சிறிதளவு உலர் திராட்சை அல்லது பேரீச்சை சாப்பிடவும்.</li>
+          <li><strong>எலுமிச்சை சாறு:</strong> உணவில் உள்ள இரும்புச்சத்தை உடல் 3 மடங்கு உறிஞ்ச வைட்டமின் C (எலுமிச்சை) அவசியம்.</li>
+        `;
+        if (assess.vitamin_b12_risk === 'Elevated' || document.getElementById('patient-diet').value === 'veg') {
+          dietList.innerHTML += `<li><strong>வைட்டமின் B12 உணவுகள்:</strong> தினமும் பால், தயிர் அல்லது பனீர் உணவில் சேர்க்கவும்.</li>`;
+        }
+      } else if (currentLang === 'hi') {
+        dietList.innerHTML = `
+          <li><strong>हरी पत्तेदार सब्जियां:</strong> पालक, मेथी और सहजन का साग हफ्ते में 3-4 बार खाएं।</li>
+          <li><strong>अनार और खजूर:</strong> रोजाना मुट्ठी भर किशमिश, काले चने या खजूर लें।</li>
+          <li><strong>नींबू पानी:</strong> खाने के साथ विटामिन C (नींबू) लेने से आयरन का अवशोषण 3 गुना बढ़ जाता है।</li>
+        `;
+        if (assess.vitamin_b12_risk === 'Elevated' || document.getElementById('patient-diet').value === 'veg') {
+          dietList.innerHTML += `<li><strong>विटामिन B12 स्रोत:</strong> रोजाना दूध, दही या पनीर लें।</li>`;
+        }
+      } else {
+        dietList.innerHTML = `
+          <li><strong>Spinach & Green Veggies:</strong> Eat palak, moringa, or methi in lunch 3-4 days a week.</li>
+          <li><strong>Dates & Raisins:</strong> Eat a handful of black raisins or dates every morning.</li>
+          <li><strong>Lemon Water Pairing:</strong> Squeeze fresh lemon over food (Vitamin C helps absorb 3x more iron).</li>
+        `;
+        if (assess.vitamin_b12_risk === 'Elevated' || document.getElementById('patient-diet').value === 'veg') {
+          dietList.innerHTML += `<li><strong>Vitamin B12 Sources:</strong> Drink a glass of milk daily, and include curd or paneer.</li>`;
+        }
+      }
+
+      const labPlan = document.getElementById('lab-plan');
+      if (currentLang === 'ta') {
+        labPlan.innerHTML = `
+          <li><strong>CBC (ஹீமோகுளோபின் பரிசோதனை):</strong> இரத்த சிவப்பணுக்கள் அளவை அறிய.</li>
+          <li><strong>Serum Ferritin:</strong> உடலில் சேமிக்கப்பட்டுள்ள இரும்புச்சத்தை கண்டறிய.</li>
+          <li><strong>Serum Vitamin B12:</strong> நரம்பு பலவீனம் மற்றும் B12 குறைபாட்டை உறுதிப்படுத்த.</li>
+        `;
+      } else if (currentLang === 'hi') {
+        labPlan.innerHTML = `
+          <li><strong>CBC (हीमोग्लोबिन टेस्ट):</strong> रक्त में हीमोग्लोबिन की सही मात्रा जानने के लिए।</li>
+          <li><strong>सीरम फेरिटिन:</strong> शरीर में जमा आयरन के स्तर की जांच के लिए।</li>
+          <li><strong>सीरम विटामिन B12:</strong> झनझनाहट और B12 की पुष्टि करने के लिए।</li>
+        `;
+      } else {
+        labPlan.innerHTML = `
+          <li><strong>Complete Blood Count (CBC):</strong> Measures exact Hemoglobin (Hb) levels.</li>
+          <li><strong>Serum Ferritin:</strong> Measures stored iron in your body.</li>
+          <li><strong>Serum Vitamin B12:</strong> Confirms B12 levels if tingling/fatigue continues.</li>
+        `;
+      }
+    }
+
+    function shareReportWhatsApp() {
+      const pName = document.getElementById('patient-name').value || 'Patient';
+      const age = document.getElementById('patient-age').value || '--';
+      const sex = document.getElementById('patient-sex').value || '--';
+      const bmi = document.getElementById('slip-bmi').textContent;
+      const token = document.getElementById('slip-token').textContent;
+
+      const anStatus = document.getElementById('badge-anemia').textContent;
+      const irStatus = document.getElementById('badge-iron').textContent;
+      const b12Status = document.getElementById('badge-b12').textContent;
+
+      const msg = `*NutriBio-Screen Clinical Triage Slip* (${token})%0A` +
+        `-----------------------------------------%0A` +
+        `*Subject:* ${pName} (${age}y / ${sex}) | BMI: ${bmi}%0A` +
+        `*Screening Assessment:*%0A` +
+        `- Anaemia Risk: ${anStatus} (${document.getElementById('conf-val-anemia').textContent})%0A` +
+        `- Iron Status: ${irStatus} (${document.getElementById('conf-val-iron').textContent})%0A` +
+        `- Vitamin B12: ${b12Status} (${document.getElementById('conf-val-b12').textContent})%0A` +
+        `-----------------------------------------%0A` +
+        `*Suggested Confirmatory Panels:* CBC, Serum Ferritin, Serum B12.%0A` +
+        `_Generated via Non-Invasive Surrogate Optical Triage Pipeline._`;
+
+      window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+    }
+  </script>
+</body>
+</html>

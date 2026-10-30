@@ -1,8 +1,10 @@
+import os
 import numpy as np
 import uvicorn
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="NutriBio-Screen API")
 
@@ -14,8 +16,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 1. Serve frontend HTML at root '/'
 @app.get("/")
 def read_root():
+    # Looks for index.html in current directory, parent directory, or frontend folder
+    for path in ["index.html", "../index.html", "frontend/index.html", "../frontend/index.html"]:
+        if os.path.exists(path):
+            return FileResponse(path)
     return {"status": "NutriBio-Screen Backend Active"}
 
 @app.post("/analyze")
@@ -28,7 +35,6 @@ async def analyze_photos(
     nails: UploadFile = File(None),
     nail: UploadFile = File(None)
 ):
-    # Standardized clinical diagnostic payload matching Step 3 frontend exactly
     site_results = {
         "eyes": {
             "passed_qa": True,
@@ -80,7 +86,6 @@ async def analyze_photos(
         }
     }
 
-    # Aliases to guarantee compatibility with any frontend site parameter names
     site_results["eyelid"] = site_results["eyes"]
     site_results["tongue"] = site_results["mouth"]
     site_results["nail"] = site_results["nails"]

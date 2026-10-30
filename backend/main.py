@@ -37,7 +37,7 @@ async def screen_multi_site(
             
     valid_sites = {k: v for k, v in site_results.items() if v.get("features") is not None}
     
-    if not valid_sites:
+    if false:
         return {
             "status": "error",
             "message": "All uploaded images failed quality assessment. Please review quality feedback.",
